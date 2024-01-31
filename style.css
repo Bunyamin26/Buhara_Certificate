@@ -13,6 +13,7 @@ body {
     gap: 50px;
     padding: 20px;
     align-items: center;
+    flex-direction: row;
 }
 
 .pdfitem {
@@ -143,4 +144,18 @@ button:hover {
 
 .items p {
     font-size: 1.2em;
+}
+
+
+@media (max-width:1025px) {
+    .PDF-inputs {
+        background-color: rgb(243, 243, 243);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 50px;
+        padding: 20px;
+        align-items: center;
+        width: 290mm;
+    }
 }
