@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input til PDF</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <div class="PDF-inputs">
+
+        <div class="pdfitem">
+            <label for="input1">Navn:</label>
+            <input type="text" id="Navn" placeholder="Indtast Navn">
+        </div>
+
+
+        <div class="pdfitem">
+            <label for="input1">Hoca:</label>
+            <input type="text" id="Hoca" placeholder="Indtast Hocanavn">
+        </div>
+
+        <div class="pdfitem">
+            <label for="input1">Dato:</label>
+            <input type="date" id="dato" placeholder="Indtast Navn">
+        </div>
+
+        <div class="pdfitem">
+            <label for="input1">Køn:</label>
+            <div style="display: flex; gap: 20px;">
+                <i style="color: rgb(0, 140, 255); cursor: pointer;" id="male" class="fa-solid fa-mars"
+                    onclick="changeText('male')"></i>
+                <i style="color: rgb(247, 0, 255); cursor: pointer;" id="female" class="fa-solid fa-venus"
+                    onclick="changeText('female')"></i>
+            </div>
+        </div>
+
+        <div class="pdfitem">
+            <button onclick="generatePDF()">Generer PDF</button>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <h1>DEN ÆDLE KORAN LÆSECERIFIKAT</h1>
+        <h3 class="elevnavn"></h3>
+        <hr class="containerhr">
+        <p class="text">Har opnået berretigelse til at modtage dette certifikat for at have lært at læse vor livs bog,
+            den Ædle
+            Koran. <br> Vi lykønsker
+            <span class="elevnavn2"></span> for hans indsats, med den bøn om at vor Almægtige الله عز وجل gør
+            ham
+            i
+            stand til at recitere Koranen gentagende gange, forstå, efterleve og viderbringe budskabet til andre
+            mennesker.
+        </p>
+
+        <div class="items">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <label for="">Dato</label>
+                <p class="datevalue"></p>
+            </div>
+
+            <img src="Serhendi Logo.png" alt="">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <label for="">Hoca</label>
+                <p class="hocaname"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
+    <script>
+
+        function changeText(gender) {
+            var textElement = document.querySelector('.text');
+            var elevnavnElement = document.querySelector('.elevnavn2');
+
+            if (gender === 'male') {
+                textElement.innerHTML = 'Har opnået berettigelse til at modtage dette certifikat for at have lært at læse vor livs bog, den Ædle Koran. <br> Vi lykønsker <span class="elevnavn2"></span> for hans indsats, med den bøn om at vor Almægtige الله عز وجل gør ham i stand til at recitere Koranen gentagende gange, forstå, efterleve og viderebringe budskabet til andre mennesker.';
+            } else if (gender === 'female') {
+                textElement.innerHTML = 'Har opnået berettigelse til at modtage dette certifikat for at have lært at læse vor livs bog, den Ædle Koran. <br> Vi lykønsker <span class="elevnavn2"></span> for hendes indsats, med den bøn om at vor Almægtige الله عز وجل gør hende i stand til at recitere Koranen gentagende gange, forstå, efterleve og viderebringe budskabet til andre mennesker.';
+            }
+        }
+
+        function updateContent(inputId, ...classNames) {
+            var inputValue = document.getElementById(inputId).value;
+
+            if (inputId === 'dato') {
+                // Format date as ddmmyyyy
+                var date = new Date(inputValue);
+                var day = date.getDate().toString().padStart(2, '0');
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var year = date.getFullYear().toString();
+
+                // Update content for each class
+                classNames.forEach(className => {
+                    document.querySelector('.' + className).textContent = day + '-' + month + '-' + year;
+                });
+            } else {
+                // For other inputs, update content directly for each class
+                classNames.forEach(className => {
+                    document.querySelector('.' + className).textContent = inputValue;
+                });
+            }
+        }
+
+        document.getElementById('Navn').addEventListener('input', function () {
+            updateContent('Navn', 'elevnavn', 'elevnavn2');
+        });
+
+        document.getElementById('Hoca').addEventListener('input', function () {
+            updateContent('Hoca', 'hocaname');
+        });
+
+        document.getElementById('dato').addEventListener('input', function () {
+            updateContent('dato', 'datevalue');
+        });
+    </script>
+
+
+
+    <script>
+        function generatePDF() {
+            // Use html2pdf to generate PDF from .container
+            html2pdf(document.querySelector('.container'), {
+                margin: 0,
+                padding: 0,
+                filename: 'output.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            });
+        }
+    </script>
+</body>
+
+</html>
