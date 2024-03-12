@@ -16,134 +16,183 @@
 
 <body>
 
-    <div class="PDF-inputs">
-
-        <div class="pdfitem">
-            <label for="input1">Navn:</label>
-            <input type="text" id="Navn" placeholder="Indtast Navn">
-        </div>
-
-
-        <div class="pdfitem">
-            <label for="input1">Hoca:</label>
-            <input type="text" id="Hoca" placeholder="Indtast Hocanavn">
-        </div>
-
-        <div class="pdfitem">
-            <label for="input1">Dato:</label>
-            <input type="date" id="dato" placeholder="Indtast Navn">
-        </div>
-
-        <div class="pdfitem">
-            <label for="input1">Køn:</label>
-            <div style="display: flex; gap: 20px;">
-                <i style="color: rgb(0, 140, 255); cursor: pointer;" id="male" class="fa-solid fa-mars"
-                    onclick="changeText('male')"></i>
-                <i style="color: rgb(247, 0, 255); cursor: pointer;" id="female" class="fa-solid fa-venus"
-                    onclick="changeText('female')"></i>
-            </div>
-        </div>
-
-        <div class="pdfitem">
-            <button onclick="generatePDF()">Generer PDF</button>
-        </div>
-
-    </div>
 
     <div class="container">
-        <h1>DEN ÆDLE KORAN LÆSECERIFIKAT</h1>
-        <h3 class="elevnavn"></h3>
-        <hr class="containerhr">
-        <p class="text">Har opnået berretigelse til at modtage dette certifikat for at have lært at læse vor livs bog,
-            den Ædle
-            Koran. <br> Vi lykønsker
-            <span class="elevnavn2"></span> for hans indsats, med den bøn om at vor Almægtige الله عز وجل gør
-            ham
-            i
-            stand til at recitere Koranen gentagende gange, forstå, efterleve og viderbringe budskabet til andre
-            mennesker.
-        </p>
-
-        <div class="items">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <label for="">Dato</label>
-                <p class="datevalue"></p>
+        <div class="infoholder">
+            <div class="empty">
+                <img src="0x0.png" height="100px" alt="">
             </div>
 
-            <img src="Serhendi Logo.png" alt="">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <label for="">Hoca</label>
-                <p class="hocaname"></p>
+            <div class="info">
+
+                <p>Elite Auto ApS<br>Gammel Køge landevej 479<br>2650 Hvidovre</p>
+                <p><b>CVR:</b> 39024144<br><b>TLF:</b> 42 54 45 44<br><b>KONTO:</b> 3409 - 12476655</p>
+
             </div>
+        </div>
+
+        <div class="section1">
+            <p>Købskontrakt</p>
+        </div>
+
+        <div class="seller">
+            <h4>SÆLGER</h4>
+            <div class="sellerinfo">
+                <div class="empt" style="width: 10%; height: 10px;"></div>
+                <div class="sell">
+                    <div class="info-sælger">
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Navn:</label>
+                            <input id="Navn" type="text">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Adresse:</label>
+                            <input id="Adresse" type="text">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Tlf. nr.:</label>
+                            <input id="Telefon" type="text">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Reg:</label>
+                            <input id="Reg" type="text">
+                            <label for="">Kontonummer:</label>
+                            <input id="Konto" type="text">
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="break">
+
+        <div class="seller">
+            <h4>BILEN</h4>
+            <div class="sellerinfo">
+                <div class="empt" style="width: 10%; height: 10px;"></div>
+                <div class="sell">
+                    <div class="info-sælger">
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Reg/Stelnummer:</label>
+                            <input style="text-transform: uppercase;" id="Plate" type="text" maxlength="17">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Mærke/Model:</label>
+                            <input id="Make" type="text">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Købesum:</label>
+                            <input id="Price" type="text">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Overtagelsesdato:</label>
+                            <input id="Date" type="date">
+                        </div>
+                        <hr>
+                        <div class="inputseller">
+                            <label for="">Registreringsattest:</label>
+                            <label class="reg">JA:</label>
+                            <input type="checkbox" name="" id="">
+                            <label class="reg">NEJ:</label>
+                            <input type="checkbox" name="" id="">
+                            <label class="reg">BESTILT:</label>
+                            <input type="checkbox" name="" id="">
+
+
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="break">
+
+        <div class="signatures">
+            <div class="sellersignature">
+                <h1>Sælgers Underskrift</h1>
+                <canvas id="sellerSignaturePad"></canvas>
+                <button onclick="clearSellerSignature()">Nulstil</button>
+            </div>
+
+            <div class="buyersignature">
+                <h1>Købers Underskrift</h1>
+                <canvas id="buyerSignaturePad"></canvas>
+                <button onclick="clearBuyerSignature()">Nulstil</button>
+            </div>
+        </div>
+
+        <hr class="break">
+        <div style="display: flex;
+        width: 90%;">
+
+            <p style="font-size: 10px; text-align: left; width: 90%;">Køretøjet vil efter aftale blive afmeldt inden for
+                4
+                arbejdsdage
+                eller blive
+                videresolgt.</p>
+            <button class="submit" onclick="hideButtonsAndGeneratePDF()">Generer PDF</button>
 
         </div>
 
     </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+    <script>
+        var sellerSignaturePad = new SignaturePad(document.getElementById('sellerSignaturePad'));
+        var buyerSignaturePad = new SignaturePad(document.getElementById('buyerSignaturePad'));
+
+        function clearSellerSignature() {
+            sellerSignaturePad.clear();
+        }
+
+        function clearBuyerSignature() {
+            buyerSignaturePad.clear();
+        }
+    </script>
+
 
 
 
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
+
     <script>
+        function hideButtonsAndGeneratePDF() {
+            // Get all buttons on the page
+            var buttons = document.querySelectorAll('button');
 
-        function changeText(gender) {
-            var textElement = document.querySelector('.text');
-            var elevnavnElement = document.querySelector('.elevnavn2');
+            // Hide all buttons
+            buttons.forEach(function (button) {
+                button.style.display = 'none';
+            });
 
-            if (gender === 'male') {
-                textElement.innerHTML = 'Har opnået berettigelse til at modtage dette certifikat for at have lært at læse vor livs bog, den Ædle Koran. <br> Vi lykønsker <span class="elevnavn2"></span> for hans indsats, med den bøn om at vor Almægtige الله عز وجل gør ham i stand til at recitere Koranen gentagende gange, forstå, efterleve og viderebringe budskabet til andre mennesker.';
-            } else if (gender === 'female') {
-                textElement.innerHTML = 'Har opnået berettigelse til at modtage dette certifikat for at have lært at læse vor livs bog, den Ædle Koran. <br> Vi lykønsker <span class="elevnavn2"></span> for hendes indsats, med den bøn om at vor Almægtige الله عز وجل gør hende i stand til at recitere Koranen gentagende gange, forstå, efterleve og viderebringe budskabet til andre mennesker.';
-            }
+            // Wait for 3 seconds before generating the PDF
+            setTimeout(function () {
+                generatePDF();
+            }, 3000); // 3000 milliseconds = 3 seconds
         }
-
-        function updateContent(inputId, ...classNames) {
-            var inputValue = document.getElementById(inputId).value;
-
-            if (inputId === 'dato') {
-                // Format date as ddmmyyyy
-                var date = new Date(inputValue);
-                var day = date.getDate().toString().padStart(2, '0');
-                var month = (date.getMonth() + 1).toString().padStart(2, '0');
-                var year = date.getFullYear().toString();
-
-                // Update content for each class
-                classNames.forEach(className => {
-                    document.querySelector('.' + className).textContent = day + '-' + month + '-' + year;
-                });
-            } else {
-                // For other inputs, update content directly for each class
-                classNames.forEach(className => {
-                    document.querySelector('.' + className).textContent = inputValue;
-                });
-            }
-        }
-
-        document.getElementById('Navn').addEventListener('input', function () {
-            updateContent('Navn', 'elevnavn', 'elevnavn2');
-        });
-
-        document.getElementById('Hoca').addEventListener('input', function () {
-            updateContent('Hoca', 'hocaname');
-        });
-
-        document.getElementById('dato').addEventListener('input', function () {
-            updateContent('dato', 'datevalue');
-        });
     </script>
-
-
 
     <script>
         function generatePDF() {
-            // Use html2pdf to generate PDF from .container
             html2pdf(document.querySelector('.container'), {
-                margin: 0,
                 padding: 0,
-                filename: 'Serhendi-Certifikat.pdf',
+                filename: 'Købekontrakt.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             });
         }
     </script>
