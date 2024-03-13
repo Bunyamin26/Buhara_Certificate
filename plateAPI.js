@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     var plateIDInput = document.getElementById('Plate');
     var Make = document.getElementById('Make');
-    var Pris = document.getElementById('Price');
 
 
     plateIDInput.addEventListener('input', async () => {
@@ -30,17 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                     // Update vehicle details based on the API response
-                    Make.value = make + ' ' + model + ' ( ' + registrationYear + ' ) ';
-
-                    if (model_year == 0) {
-                        vehicleYear.value = registrationYear; // Adjust property name based on actual API response
-
-                    } else {
-                        vehicleYear.value = model_year; // Adjust property name based on actual API response
-
-                    }
-
-                    vehicleColor.value = color; // Adjust property name based on actual API response
+                    Make.value = make + ' ' + model + ' ('+ registrationYear + ')';
 
                 } else {
                     console.error('Error fetching data:', response.statusText);
@@ -50,5 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
 });
+
+
 
