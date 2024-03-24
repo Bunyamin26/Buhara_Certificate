@@ -183,22 +183,28 @@
                 generatePDF();
             }, 3000); // 3000 milliseconds = 3 seconds
         }
-    </script>
 
-    <script>
         function generatePDF() {
+            // Extract input values
+            var numberPlate = document.getElementById('Plate').value.trim();
+            var carName = document.getElementById('Make').value.trim();
+
+            // Construct filename
+            var filename = "Kontrakt_" + numberPlate + "_" + carName + ".pdf";
+
+            // Generate PDF with the constructed filename
             html2pdf(document.querySelector('.container'), {
-                padding: 0,
-                filename: 'Købekontrakt.pdf',
+                filename: filename,
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            });
+            }).save();
         }
     </script>
 
-<script src="plateAPI.js"></script>
-<script src="price.js"></script>
+
+    <script src="plateAPI.js"></script>
+    <script src="price.js"></script>
 
 </body>
 
