@@ -211,6 +211,7 @@
 
             // Construct filename
             var filename = "Købekontrakt_" + numberPlate + "_" + carName + ".pdf";
+            var filePath = "Documents/Købekontrakter/" + filename;
 
             // Generate PDF with the constructed filename and save it to the specified path
             html2pdf(document.querySelector('.container'), {
