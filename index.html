@@ -16,6 +16,16 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <style>
+        @media screen and (max-width: 600px) {
+
+            /* Use a more specific selector and !important to ensure it overrides */
+            meta[name="viewport"] {
+                content: "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=yes" !important;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -187,63 +197,61 @@
 
     <script>
         function hideButtonsAndGeneratePDF() {
-            // Get all buttons on the page
+            // Hide buttons before generating PDF
             var buttons = document.querySelectorAll('button');
-            var suggestion = document.getElementById('autocompleteResults');
-
-
-
             buttons.forEach(function (button) {
                 button.style.display = 'none';
             });
 
+            var suggestion = document.getElementById('autocompleteResults');
             suggestion.style.display = 'none';
 
             // Wait for 3 seconds before generating the PDF
             setTimeout(function () {
                 generatePDF();
-            }, 3000); // 3000 milliseconds = 3 seconds
+            }, 1000); // 3000 milliseconds = 3 seconds
         }
 
         async function generatePDF() {
             // Extract input values
             var numberPlate = document.getElementById('Plate').value.trim();
             var carName = document.getElementById('Make').value.trim();
-
-            // Construct filename
             var filename = "Købekontrakt_" + numberPlate + "_" + carName + ".pdf";
 
             try {
-                // Generate PDF with html2pdf
-                const pdf = await html2pdf().from(document.querySelector('.container')).toPdf().output('blob');
-
-                // Use the File System Access API to prompt the user to save the PDF
-                const handle = await window.showSaveFilePicker({
-                    suggestedName: filename,
-                    types: [
-                        {
-                            description: 'PDF Documents',
-                            accept: {
-                                'application/pdf': ['.pdf'],
+                if (isMobileDevice()) {
+                    // Generate PDF using html2pdf for mobile devices
+                    var pdf = await html2pdf().from(document.querySelector('.container')).outputPdf('blob');
+                    var blobUrl = URL.createObjectURL(pdf);
+                    window.open(blobUrl, '_blank');
+                } else {
+                    // Generate PDF using File System Access API for desktop
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: filename,
+                        types: [
+                            {
+                                description: 'PDF Documents',
+                                accept: {
+                                    'application/pdf': ['.pdf'],
+                                },
                             },
-                        },
-                    ],
-                });
-
-                // Create a writable stream
-                const writable = await handle.createWritable();
-
-                // Write the PDF content to the file
-                await writable.write(pdf);
-
-                // Close the file and save changes
-                await writable.close();
-
-                console.log('File saved successfully.');
+                        ],
+                    });
+                    const writable = await handle.createWritable();
+                    const pdf = await html2pdf().from(document.querySelector('.container')).outputPdf('blob');
+                    await writable.write(pdf);
+                    await writable.close();
+                    console.log('File saved successfully.');
+                }
             } catch (error) {
                 console.error('Error saving file:', error);
             }
         }
+
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+    </script>
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
