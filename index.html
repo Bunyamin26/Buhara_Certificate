@@ -152,6 +152,7 @@
 
     </div>
 
+    <a download="PDF.html" id="downloadLink" style="display: none;">Download PDF</a>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
@@ -204,24 +205,48 @@
             }, 3000); // 3000 milliseconds = 3 seconds
         }
 
-        function generatePDF() {
+        async function generatePDF() {
             // Extract input values
             var numberPlate = document.getElementById('Plate').value.trim();
             var carName = document.getElementById('Make').value.trim();
 
             // Construct filename
             var filename = "Købekontrakt_" + numberPlate + "_" + carName + ".pdf";
-            var filePath = "Documents/Købekontrakter/" + filename;
 
-            // Generate PDF with the constructed filename and save it to the specified path
-            html2pdf(document.querySelector('.container'), {
-                filename: filePath,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).save();
+            try {
+                // Generate PDF with html2pdf
+                const pdf = await html2pdf().from(document.querySelector('.container')).toPdf().output('blob');
+
+                // Use the File System Access API to prompt the user to save the PDF
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: filename,
+                    types: [
+                        {
+                            description: 'PDF Documents',
+                            accept: {
+                                'application/pdf': ['.pdf'],
+                            },
+                        },
+                    ],
+                });
+
+                // Create a writable stream
+                const writable = await handle.createWritable();
+
+                // Write the PDF content to the file
+                await writable.write(pdf);
+
+                // Close the file and save changes
+                await writable.close();
+
+                console.log('File saved successfully.');
+            } catch (error) {
+                console.error('Error saving file:', error);
+            }
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/places.js@1"></script>
 
