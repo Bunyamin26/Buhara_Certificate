@@ -94,8 +94,30 @@ h4 {
     font-weight: 500;
     text-align: left;
     margin-left: 5px;
-
 }
+
+input:focus {
+    outline: none;
+    /* Remove default focus outline */
+    border: none;
+    /* Remove border */
+}
+
+input[type="checkbox"] {
+    outline: none !important;
+    /* Remove default focus outline */
+    /* Remove border */
+}
+
+.checkbox:hover {
+    transition: 0.1s ease-in-out;
+}
+
+.checkbox:hover {
+    background-color: #a0a0a0;
+}
+
+
 
 .break {
     height: 5px;
@@ -189,6 +211,21 @@ input[type="checkbox"]::before {
 
 input[type="checkbox"]:checked::before {
     transform: scale(1);
+}
+
+#autocompleteResults {
+    border-radius: 20px;
+}
+
+.suggestion {
+    cursor: pointer;
+    color: black;
+    border-bottom: 1px solid;
+    padding: 10px;
+}
+
+.suggestion:hover {
+    background-color: #dddddd;
 }
 
 input[type="checkbox"]:focus {

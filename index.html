@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="dk">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -49,8 +51,11 @@
                         <hr>
                         <div class="inputseller">
                             <label for="">Adresse:</label>
-                            <input id="Adresse" type="text">
+                            <input type="text" id="addressInput">
+
                         </div>
+                        <div id="autocompleteResults"></div>
+
                         <hr>
                         <div class="inputseller">
                             <label for="">Tlf.nr.:</label>
@@ -95,17 +100,17 @@
                         <hr>
                         <div class="inputseller">
                             <label for="">Overtagelsesdato:</label>
-                            <input id="Date" type="date">
+                            <input type="date" id="Date" required pattern="\d{4}-\d{2}-\d{2}" />
                         </div>
                         <hr>
                         <div class="inputseller">
                             <label for="">Registreringsattest:</label>
                             <label class="reg">JA:</label>
-                            <input type="checkbox" name="" id="">
+                            <input class="checkbox" type="checkbox" name="" id="">
                             <label class="reg">NEJ:</label>
-                            <input type="checkbox" name="" id="">
+                            <input class="checkbox" type="checkbox" name="" id="">
                             <label class="reg">BESTILT:</label>
-                            <input type="checkbox" name="" id="">
+                            <input class="checkbox" type="checkbox" name="" id="">
 
 
                         </div>
@@ -150,8 +155,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 
     <script>
-        var sellerSignaturePad = new SignaturePad(document.getElementById('sellerSignaturePad'));
-        var buyerSignaturePad = new SignaturePad(document.getElementById('buyerSignaturePad'));
+        var sellerSignaturePad = new SignaturePad(document.getElementById('sellerSignaturePad'), {
+            penColor: 'rgb(0, 0, 0)', // Adjust the pen color (default is black)
+            minWidth: 1, // Adjust the minimum width of the stroke
+            maxWidth: 1 // Adjust the maximum width of the stroke
+        });
+
+        var buyerSignaturePad = new SignaturePad(document.getElementById('buyerSignaturePad'), {
+            penColor: 'rgb(0, 0, 0)', // Adjust the pen color (default is black)
+            minWidth: 1, // Adjust the minimum width of the stroke
+            maxWidth: 1 // Adjust the maximum width of the stroke
+        });
 
         function clearSellerSignature() {
             sellerSignaturePad.clear();
@@ -172,11 +186,15 @@
         function hideButtonsAndGeneratePDF() {
             // Get all buttons on the page
             var buttons = document.querySelectorAll('button');
+            var suggestion = document.getElementById('autocompleteResults');
 
-            // Hide all buttons
+
+
             buttons.forEach(function (button) {
                 button.style.display = 'none';
             });
+
+            suggestion.style.display = 'none';
 
             // Wait for 3 seconds before generating the PDF
             setTimeout(function () {
@@ -190,7 +208,7 @@
             var carName = document.getElementById('Make').value.trim();
 
             // Construct filename
-            var filename = "Kontrakt_" + numberPlate + "_" + carName + ".pdf";
+            var filename = "Købekontrakt_" + numberPlate + "_" + carName + ".pdf";
 
             // Generate PDF with the constructed filename
             html2pdf(document.querySelector('.container'), {
@@ -201,6 +219,47 @@
             }).save();
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/places.js@1"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var input = document.getElementById('addressInput');
+
+            // Display autocomplete suggestions
+            input.addEventListener('input', function () {
+                var inputValue = input.value.trim();
+                if (inputValue.length === 0) {
+                    document.getElementById('autocompleteResults').innerHTML = '';
+                    return;
+                }
+
+                fetch('https://api.geoapify.com/v1/geocode/autocomplete?text=' + encodeURIComponent(inputValue) + '&lang=da&limit=5&apiKey=dd99de9d860b4f65966d487296b6046f')
+                    .then(response => response.json())
+                    .then(data => {
+                        var suggestionsHTML = '';
+                        data.features.forEach(function (feature) {
+                            var formattedAddress = feature.properties.formatted.replace(/, Kommune/, '').replace(/Kommune/g, '').replace(/, Danmark/, '');
+                            suggestionsHTML += '<p class="suggestion">' + formattedAddress + '</p>';
+                        });
+                        document.getElementById('autocompleteResults').innerHTML = suggestionsHTML;
+                    })
+                    .catch(error => {
+                        console.error('Fejl ved hentning af autoudfyldningsforslag:', error);
+                    });
+            });
+
+            // Handle suggestion selection
+            document.getElementById('autocompleteResults').addEventListener('click', function (e) {
+                if (e.target && e.target.matches('.suggestion')) {
+                    var address = e.target.textContent;
+                    input.value = address;
+                    document.getElementById('autocompleteResults').innerHTML = ''; // Ryd forslag
+                }
+            });
+        });
+    </script>
+
 
 
     <script src="plateAPI.js"></script>
